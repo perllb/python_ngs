@@ -1,10 +1,22 @@
-filename = input("Enter filename")
-pattern1 = input("Enter header string to remove")
-pattern2 = input("Enter another header string to remove")
+filename = input("Enter filename: ")
+filt = input("How many reads on average is the cutoff?: ")
+pattern1 = input("Enter header string to remove: ")
+pattern2 = input("Enter another header string to remove: ")
+
 rep = ""
 
+
+## function to get average reads of samples 
+def getAverage(lineList):
+    ncol = len(lineList)
+    count = 0 # variable to count the total number of reads 
+    for samp in lineList[6:ncol]:
+        count = count + float(samp)
+    return count/(ncol-6)
+
+
 ## function to filter file
-def filter(file):
+def filter_fCounts(file,filter=5):
     newfile = open(file+".filtered","w")
     with open(file,"r") as fin:
         i = 1
@@ -20,10 +32,10 @@ def filter(file):
                 else:
                     # if more than 5 reads on average, write
                     linelist = line.split()
-                    if float(linelist[7])+float(linelist[6])>10:
+                    if getAverage(linelist)>float(filter):
                         newfile.write(line)
             i = i + 1
 
-filter(filename)
+filter_fCounts(filename,filt)
 
-print("New, filtered count file created, named:",file+".filtered")
+print("New, filtered count file created, named:",filename+".filtered")
