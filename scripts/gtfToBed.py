@@ -8,24 +8,30 @@ import sys
 def main(argv):
     gtfname = ''
     feature = ''
+    outfile = None
     try:
-        opts, args = getopt.getopt(argv,"hi:f:",["ifile=","feat="])
+        opts, args = getopt.getopt(argv,"hi:f:o:",["ifile=","feat=","out="])
     except getopt.GetoptError:
-        print ('usage: test.py -i <gtf-file to convert> -f <features> ')
+        print ('usage: test.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
         sys.exit(2)
     if len(opts) > 1:
         for opt, arg in opts:
             if opt == 'gi':
-                print ('usage: test.py -i <gtf-file to convert> -f <features> ')
+                print ('usage: test.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
                 sys.exit()
             elif opt in ("-i","--ifile"):
                 gtfname = arg
             elif opt in ("-f","--feat"):
                 feature = arg
+            elif opt in ("-o","--out"):
+                outfile = arg
         print("Inputfile: "+gtfname)
         print("Features:  "+feature)
+        if outfile==None:
+            outfile = gtfname.replace('.gtf','.' + feature + '.bed')
+        print("Outfile:   "+outfile)
     else:
-        print ('usage: test.py -i <gtf-file to convert> -f <features> ')
+        print ('usage: test.py -i <gtf-file to convert> -f <features>  -o <outfile (optional)>')
         sys.exit()
 
     while not os.path.isfile(gtfname) :
@@ -37,15 +43,14 @@ def main(argv):
     print("> " + gtfname + " will be converted to BED")
 
     # read gtf file
-    print("> Reading gtf file '" + gtfname + "..")
+    print("> Reading gtf file '" + gtfname + "'..")
     gtf = pd.read_csv(gtfname,sep='\t',header=None,comment='#')
 
-    print('Feature: ' + feature)
-
     if feature=='all':
-        bed = gtf[[0,3,4,8,5,6]]
-        bed.to_csv(gtfname.replace('.gtf','.all.bed'),sep="\t",header=None,index=False)
-        print("> Printed to: " + gtfname.replace('.gtf','.all.bed'))
+        bed = pd.DataFrame({'a':gtf[0],'b':gtf[3],'c':gtf[4],'d':gtf[8].apply(lambda x: x.replace('\"','\'')),'e':gtf[5],'f':gtf[6]})
+        print(bed.head())
+        bed.to_csv(outfile,sep="\t",header=None,index=False)
+        print("> Printed to: " + outfile)
     else:
         # function to get feature from each row
         def getFeature(annotation,feature):
@@ -70,9 +75,8 @@ def main(argv):
         df3 = pd.DataFrame(gtf[[5,6]])
 
         bed = pd.concat([df1,df2,df3],axis=1)
-        bedname = gtfname.replace('.gtf','.' + feature + '.bed')
-        bed.to_csv(bedname,sep="\t",header=None,index=False)
-        print("> Printed to: " + bedname)
+        bed.to_csv(outfile,sep="\t",header=None,index=False)
+        print("> Printed to: " + outfile)
 
 
 
