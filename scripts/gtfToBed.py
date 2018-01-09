@@ -38,6 +38,7 @@ def main(argv):
     else:
         printUsage()
         sys.exit()
+        #oasf 
 
     while not os.path.isfile(gtfname) :
         print("> '" + gtfname + "' does not exist..")
