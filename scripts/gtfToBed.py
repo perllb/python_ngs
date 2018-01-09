@@ -5,6 +5,11 @@ import numpy as np
 import os.path
 import sys
 
+def printUsage():
+    print ('usage: \n> python bedToGtf.py -i <bed-file to convert> -f <features> -o <outfile (optional)>')
+    print ('-f <feature> : What ID do you want to get and use in bed (e.g. gene_name)')
+    print ('-o <outfile> : Name of out gtf file. Optional, and a suitable name will be given if not specified.')
+
 def main(argv):
     gtfname = ''
     feature = ''
@@ -12,12 +17,12 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:f:o:",["ifile=","feat=","out="])
     except getopt.GetoptError:
-        print ('usage: gtfToBed.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
+        printUsage()
         sys.exit(2)
     if len(opts) > 1:
         for opt, arg in opts:
             if opt == 'gi':
-                print ('usage: gtfToBed.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
+                printUsage()
                 sys.exit()
             elif opt in ("-i","--ifile"):
                 gtfname = arg
@@ -31,7 +36,7 @@ def main(argv):
             outfile = gtfname.replace('.gtf','.' + feature + '.bed')
         print("Outfile:   "+outfile)
     else:
-        print ('usage: gtfToBed.py -i <gtf-file to convert> -f <features>  -o <outfile (optional)>')
+        printUsage()
         sys.exit()
 
     while not os.path.isfile(gtfname) :

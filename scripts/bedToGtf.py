@@ -5,22 +5,29 @@ import numpy as np
 import os.path
 import sys
 
+def printUsage():
+    print ('usage: \n> python bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile (optional)>')
+    print ('-f <feature> : What will you call ID (e.g. gene_name)')
+    print ('-a <annotation> : What annotation database is it? (e.g. RepeatMasker)')
+    print ('-l <level> : What type of feature is it? (e.g. exon)')
+    print ('-o <outfile> : Name of out gtf file. Optional, and a suitable name will be given if not specified.')
+
 def main(argv):
     bedname = ''
     feature = 'all'
     ann = ''
     level = ''
-    outfile = ''
+    outfile = None
     outArg = 'F'
     try:
         opts, args = getopt.getopt(argv,"hi:f:a:l:o:",["ifile=","feature=","annotation=","level=","outfile="])
     except getopt.GetoptError:
-        print ('usage: bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
+        printUsage()
         sys.exit(2)
     if len(opts) > 3:
         for opt, arg in opts:
             if opt == 'gi':
-                print ('usage: bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
+                printUsage()
                 sys.exit()
             elif opt in ("-i","--ifile"):
                 bedname = arg
@@ -39,9 +46,11 @@ def main(argv):
         print("Features:   "+feature)
         print("Annotation: "+ann)
         print("Level:      "+level)
-        print("Outfile:    "+outfile)
+        if outfile==None:
+            outfile = gtfname.replace('.gtf','.' + feature + '.bed')
+        print("Outfile:   "+outfile)
     else:
-        print ('usage: bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
+        printUsage()
         sys.exit()
 
     while not os.path.isfile(bedname) :
@@ -56,6 +65,7 @@ def main(argv):
     print("> Reading bed file '" + bedname + "..")
     bed = pd.read_csv(bedname,sep='\t',header=None,comment='#')
 
+    # no specified feature, take the ID used in the bedfile
     if feature=='all':
         annVec = np.repeat(ann,len(bed[0]))
         levVec = np.repeat(level,len(bed[0]))
@@ -64,8 +74,9 @@ def main(argv):
         gtf.to_csv(outfile,sep="\t",header=None,index=False)
         print(gtf.head())
         print("> Printed to: " + outfile)
-    else:
 
+    # featureName (e.g. gene_name) is specified, and has to be added manually
+    else:
         featureVec = np.repeat(feature + ' \"',len(bed[0]))
         last = np.repeat('\"',len(bed[0]))
         vec2 = np.core.defchararray.add(featureVec,bed[3])
