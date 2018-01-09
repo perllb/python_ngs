@@ -23,6 +23,7 @@ def main(argv):
         for opt, arg in opts:
             if opt == 'gi':
                 printUsage()
+                print('exit')
                 sys.exit()
             elif opt in ("-i","--ifile"):
                 gtfname = arg
