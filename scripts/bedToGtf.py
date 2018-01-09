@@ -7,7 +7,7 @@ import sys
 
 def main(argv):
     bedname = ''
-    feature = ''
+    feature = 'all'
     ann = ''
     level = ''
     outfile = ''
@@ -15,18 +15,19 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:f:a:l:o:",["ifile=","feature=","annotation=","level=","outfile="])
     except getopt.GetoptError:
-        print ('usage: test.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
+        print ('usage: bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
         sys.exit(2)
     if len(opts) > 3:
         for opt, arg in opts:
             if opt == 'gi':
-                print ('usage: test.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
+                print ('usage: bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
                 sys.exit()
             elif opt in ("-i","--ifile"):
                 bedname = arg
                 outfile = bedname.replace('.bed','.gtf')
             elif opt in ("-f","--feature"):
-                feature = arg
+                if feature != 'all':
+                    feature = arg
             elif opt in ("-a","--annotation"):
                 ann = arg
             elif opt in ("-l","--level"):
@@ -40,7 +41,7 @@ def main(argv):
         print("Level:      "+level)
         print("Outfile:    "+outfile)
     else:
-        print ('usage: test.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
+        print ('usage: bedToGtf.py -i <bed-file to convert> -f <features> -a <annotation> -l <level> -o <outfile>')
         sys.exit()
 
     while not os.path.isfile(bedname) :
@@ -58,7 +59,8 @@ def main(argv):
     if feature=='all':
         annVec = np.repeat(ann,len(bed[0]))
         levVec = np.repeat(level,len(bed[0]))
-        gtf = pd.DataFrame({'a':bed[0],'b':annVec,'c':levVec,'d':bed[1],'e':bed[2],'f':bed[4],'g':bed[5],'h':bed[4],'i':bed[3]})
+        i = bed[3].apply(lambda x: level + " \'" + x + "\';")
+        gtf = pd.DataFrame({'a':bed[0],'b':annVec,'c':levVec,'d':bed[1],'e':bed[2],'f':bed[4],'g':bed[5],'h':bed[4],'i':i})
         gtf.to_csv(outfile,sep="\t",header=None,index=False)
         print(gtf.head())
         print("> Printed to: " + outfile)

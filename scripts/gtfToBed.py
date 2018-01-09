@@ -12,12 +12,12 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:f:o:",["ifile=","feat=","out="])
     except getopt.GetoptError:
-        print ('usage: test.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
+        print ('usage: gtfToBed.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
         sys.exit(2)
     if len(opts) > 1:
         for opt, arg in opts:
             if opt == 'gi':
-                print ('usage: test.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
+                print ('usage: gtfToBed.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
                 sys.exit()
             elif opt in ("-i","--ifile"):
                 gtfname = arg
@@ -31,7 +31,7 @@ def main(argv):
             outfile = gtfname.replace('.gtf','.' + feature + '.bed')
         print("Outfile:   "+outfile)
     else:
-        print ('usage: test.py -i <gtf-file to convert> -f <features>  -o <outfile (optional)>')
+        print ('usage: gtfToBed.py -i <gtf-file to convert> -f <features>  -o <outfile (optional)>')
         sys.exit()
 
     while not os.path.isfile(gtfname) :
