@@ -1,4 +1,4 @@
-#!~/anaconda3/bin/python
+#!/home/pbrattaas/anaconda3/bin/python3.6
 import sys, getopt
 import pandas as pd
 import numpy as np
@@ -30,20 +30,21 @@ def main(argv):
                 feature = arg
             elif opt in ("-o","--out"):
                 outfile = arg
-        print("Inputfile: "+gtfname)
-        print("Features:  "+feature)
-        if outfile==None:
-            outfile = gtfname.replace('.gtf','.' + feature + '.bed')
-        print("Outfile:   "+outfile)
+
     else:
         printUsage()
         sys.exit()
+# Make sure infile exists
     while not os.path.isfile(gtfname) :
         print("> '" + gtfname + "' does not exist..")
         gtfname = input(">> Please enter GTF file to convert to BED or exit ('q'): ")
         if gtfname == 'q':
             sys.exit()
-
+    print("Inputfile: "+gtfname)
+    print("Features:  "+feature)
+    if outfile==None:
+        outfile = gtfname.replace('.gtf','.' + feature + '.bed')
+    print("Outfile:   "+outfile)
     print("> " + gtfname + " will be converted to BED")
 
     # read gtf file
