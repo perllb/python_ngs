@@ -76,12 +76,10 @@ def main(argv):
 
     # featureName (e.g. gene_name) is specified, and has to be added manually
     else:
-        featureVec = np.repeat(feature + ' \"',len(bed[0]))
         annVec = np.repeat(ann,len(bed[0]))
         levVec = np.repeat(level,len(bed[0]))
-
-        i = bed[3].apply(lambda x: feature + " \'" + x + "\';")
-        gtf = pd.DataFrame({'a':bed[0],'b':annVec,'c':levVec,'d':bed[1],'e':bed[2],'f':bed[4],'g':bed[5],'h':bed[4],'i':j})
+        i = bed[3].apply(lambda x: feature + " --" + x + "--;")
+        gtf = pd.DataFrame({'a':bed[0],'b':annVec,'c':levVec,'d':bed[1],'e':bed[2],'f':bed[4],'g':bed[5],'h':bed[4],'i':i})
 
         gtf.to_csv(outfile,sep="\t",header=None,index=False)
         print("> Printed to: " + outfile)
