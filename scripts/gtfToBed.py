@@ -1,4 +1,5 @@
-#!/home/pbrattaas/anaconda3/bin/python3.6
+#!/usr/bin/python
+
 import sys, getopt
 import pandas as pd
 import numpy as np

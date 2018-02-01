@@ -1,4 +1,4 @@
-#!~/anaconda3/bin/python
+#!/usr/bin/python
 import sys, getopt
 import pandas as pd
 import numpy as np
