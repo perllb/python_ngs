@@ -7,9 +7,9 @@ import os.path
 import sys
 
 def printUsage():
-    print ('usage: \n> python bedToGtf.py -i <bed-file to convert> -f <features> -o <outfile (optional)>')
+    print ('usage: \n> python gtfToBed.py -i <gtf-file to convert> -f <features> -o <outfile (optional)>')
     print ('-f <feature> : What ID do you want to get and use in bed (e.g. gene_name)')
-    print ('-o <outfile> : Name of out gtf file. Optional, and a suitable name will be given if not specified.')
+    print ('-o <outfile> : Name of out bed file. Optional, and a suitable name will be given if not specified.')
 
 def main(argv):
     gtfname = ''
